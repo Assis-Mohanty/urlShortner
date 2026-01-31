@@ -7,7 +7,7 @@ import (
 )
 
 type UrlRepository interface {
-	CreateShortUrl(longUrl string ,shortUrl string)(int,error)
+	CreateShortUrl(longUrl string ,shortUrl string)(string,error)
 	GetLongUrl(shortUrl string)(string,error )
 	GetIdByLongUrl(longUrl string)(int,error)
 	CreateLongUrl(longUrl string )(int ,error)
@@ -23,19 +23,19 @@ func NewUrlRepository(db *sql.DB)UrlRepository{
 	}
 }
 
-func (ur *UrlRepositoryImpl)CreateShortUrl(longUrl string ,shortUrl string)(int,error){
+func (ur *UrlRepositoryImpl)CreateShortUrl(longUrl string ,shortUrl string)(string,error){
 	query:= "UPDATE urls SET short_url = ? WHERE long_url = ?;"
 	row,err:=ur.db.Exec(query , shortUrl,longUrl)
 	fmt.Println(row)
 	if err != nil {
-		return 0,err
+		return err.Error(),err
 	}
 	id,err:=row.LastInsertId()
 	if err != nil {
-		return 0,err 
+		return err.Error(),err 
 	}
 	fmt.Println(id)
-	return int(id),nil
+	return shortUrl,nil
 }
 
 func (ur *UrlRepositoryImpl) GetLongUrl(shortUrl string)(string ,error ){

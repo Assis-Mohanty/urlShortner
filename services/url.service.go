@@ -7,7 +7,7 @@ import (
 )
 
 type UrlService interface {
-	CreateShortUrl(longUrl string ) (int, error)
+	CreateShortUrl(longUrl string ) (string, error)
 	GetLongUrl(shortUrl string) (string, error)
 	GetIdByLongUrl(longUrl string)(int,error)
 	CreateLongUrl(longUrl string )(int ,error)
@@ -23,10 +23,10 @@ func NewUrlServiceImpl(urlRepository repository.UrlRepository)UrlService{
 	}
 }
 
-func (us *UrlServiceImpl)CreateShortUrl(longUrl string)(int ,error){
+func (us *UrlServiceImpl)CreateShortUrl(longUrl string)(string ,error){
 	shortUrl,err:=us.GenerateShortUrlFromLongUrl(longUrl)
 	if err != nil {
-		return -1,err
+		return err.Error() ,err
 	}
 	fmt.Println("qqq",shortUrl)
 	fmt.Println(longUrl)
